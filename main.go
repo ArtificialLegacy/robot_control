@@ -58,6 +58,7 @@ const (
 )
 
 var speed byte = 255
+var dir byte = MOTOR_FWD
 
 func handleConnection(c net.Conn) {
 	fmt.Printf("Connection: %s\n", c.RemoteAddr().String())
@@ -84,8 +85,8 @@ func handleConnection(c net.Conn) {
 		c.Write([]byte{
 			FLAG_CMD,
 			6,
-			ACTION_MSP, 1 | MOTOR_FWD, speed,
-			ACTION_MSP, 2 | MOTOR_FWD, speed,
+			ACTION_MSP, 1 | dir, speed,
+			ACTION_MSP, 2 | dir, speed,
 		})
 
 		tmp, err := read(c)
@@ -95,6 +96,17 @@ func handleConnection(c net.Conn) {
 		if tmp[0] != FLAG_ACK {
 			fmt.Printf("failed to acknowledge, receieved %d instead.\n", tmp[0])
 			return
+		}
+
+		speed--
+		if speed == 0 {
+			if dir == MOTOR_FWD {
+				dir = MOTOR_BAK
+			} else {
+				dir = MOTOR_FWD
+			}
+
+			speed = 255
 		}
 	}
 }
