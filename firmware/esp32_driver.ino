@@ -1,15 +1,5 @@
 #include <WiFi.h>
 
-const int A_PWM = 27;
-const int A_FWD = 16;
-const int A_BAK = 17;
-const int A_STL = 30;
-
-const int B_PWM = 26;
-const int B_FWD = 18;
-const int B_BAK = 19;
-const int B_STL = 30;
-
 const char *SSID = "wifi-network";
 const char *PASS = "wifi-pass";
 
@@ -33,24 +23,81 @@ const unsigned char MOTOR_MID = 63;
 const unsigned char REPORT_MEN = 1;
 const unsigned char REPORT_MSP = 2;
 
+class Motor {
+public:
+    Motor(int pwm, int fwd, int bak, int stl) {
+        this->pwm = pwm;
+        this->fwd = fwd;
+        this->bak = bak;
+        this->stl = stl;
+    }
+
+    void init() {
+        pinMode(this->pwm, OUTPUT);
+        pinMode(this->fwd, OUTPUT);
+        pinMode(this->bak, OUTPUT);
+    }
+
+    void disable() {
+        this->motorDisable(this->fwd, this->bak, this->pwm);
+    }
+
+    void enable(char dir, char speed) {
+        if (speed <= this->stl) {
+            this->motorDisable(this->fwd, this->bak, this->pwm);
+            return;
+        }
+
+        switch (dir) {
+        case MOTOR_FWD:
+            this->forward(speed);
+            break;
+        case MOTOR_BAK:
+            this->backward(speed);
+            break;
+        }
+    }
+
+private:
+    int pwm;
+    int fwd;
+    int bak;
+    int stl;
+
+    void forward(char speed) {
+        this->motorEnable(this->fwd, this->bak, this->pwm, speed);
+    }
+
+    void backward(char speed) {
+        this->motorEnable(this->bak, this->fwd, this->pwm, speed);
+    }
+
+    void motorEnable(int diron, int diroff, int pwm, char speed) {
+        digitalWrite(diroff, LOW);
+        digitalWrite(diron, HIGH);
+        analogWrite(pwm, speed);
+    }
+
+    void motorDisable(int dira, int dirb, int pwm) {
+        digitalWrite(dira, LOW);
+        digitalWrite(dirb, LOW);
+        digitalWrite(pwm, LOW);
+    }
+};
+
+const char largestMotor = 2;
+Motor motors[2] = {
+    { 27, 16, 17, 50 },
+    { 26, 18, 19, 50 }
+};
+
 WiFiClient client;
 
-void setup()
-{
+void setup() {
     Serial.begin(115200);
-
-    pinMode(A_PWM, OUTPUT);
-    pinMode(A_FWD, OUTPUT);
-    pinMode(A_BAK, OUTPUT);
-
-    pinMode(B_PWM, OUTPUT);
-    pinMode(B_FWD, OUTPUT);
-    pinMode(B_BAK, OUTPUT);
-
     WiFi.begin(SSID, PASS);
 
-    while (WiFi.status() != WL_CONNECTED)
-    {
+    while (WiFi.status() != WL_CONNECTED) {
         delay(500);
         Serial.println("...");
     }
@@ -58,73 +105,67 @@ void setup()
     Serial.print("WiFi connected with IP:");
     Serial.println(WiFi.localIP());
 
-    while (!client.connect(SERVER, PORT))
-    {
+    while (!client.connect(SERVER, PORT)) {
         Serial.println("Connection to host failed");
         delay(1000);
     }
 
     client.write(FLAG_ACK);
-    while (!client.available())
-    {
+    while (!client.available()) {
         Serial.println("waiting for ack...");
     }
 
     char response = client.read();
-    if (response != FLAG_ACK)
-    {
+    if (response != FLAG_ACK) {
         Serial.println("ack failed");
         stopRobot();
     }
     client.flush();
+
+    for (int i = 0; i < largestMotor; i++) {
+        motors[i].init();
+    }
 }
 
-void stopRobot()
-{
+void stopRobot() {
     Serial.println();
     Serial.println("disconnecting.");
     client.stop();
 
-    motorDisable(A_FWD, A_BAK, A_PWM);
-    motorDisable(B_FWD, B_BAK, B_PWM);
+    for (int i = 0; i < largestMotor; i++) {
+        motors[i].disable();
+    }
 
-    for (;;)
+    for(;;)
         ;
 }
 
-void loop()
-{
+void loop() {
     int len = client.available();
-    if (len > 0)
-    {
+    if (len > 0) {
         processSignal(len);
     }
 
-    if (!client.connected())
-    {
+    if (!client.connected()) {
         stopRobot();
     }
 }
 
-void processSignal(int len)
-{
-    char *packet = new char[len];
+void processSignal(int len) {
+    char* packet = new char[len];
 
-    for (int i = 0; i < len; i++)
-    {
+    for (int i = 0; i < len; i++) {
         packet[i] = client.read();
     }
 
-    switch (packet[0])
-    {
-    case NIL:
-        Serial.println("recieved nil response flag.");
-        stopRobot();
-        break;
-    case FLAG_CMD:
-        Serial.println("recieved cmd response flag.");
-        processCMD(packet);
-        break;
+    switch (packet[0]) {
+        case NIL:
+            Serial.println("recieved nil response flag.");
+            stopRobot();
+            break;
+        case FLAG_CMD:
+            processCMD(packet);
+            break;
     }
 
     client.write(FLAG_ACK);
@@ -132,82 +173,36 @@ void processSignal(int len)
     delete[] packet;
 }
 
-void processCMD(char *packet)
-{
+void processCMD(char* packet) {
     int len = packet[1];
-    Serial.print("cmd len: ");
-    Serial.println(len);
 
-    for (int i = 0; i < len; i++)
-    {
-        int pos = i + 2;
-        switch (packet[pos])
-        {
-        case NIL:
-            break;
-        case ACTION_MSP:
-            processActionMSP(packet[pos + 1], packet[pos + 2]);
-            i += 2;
-            break;
-        default:
-            Serial.print("unknown action: ");
-            Serial.println(packet[pos]);
-            stopRobot();
+    for (int i = 0; i < len; i++) {
+        int pos = i+2;
+        switch (packet[pos]) {
+            case NIL:
+                break;
+            case ACTION_MSP:
+                processActionMSP(packet[pos+1], packet[pos+2]);
+                i += 2;
+                break;
+            default:
+                Serial.print("unknown action: ");
+                Serial.println(packet[pos]);
+                stopRobot();
         }
     }
 }
 
-void processActionMSP(char motor, char speed)
-{
-    int motorId = motor & MOTOR_MID;
-    int motorDir = motor & MOTOR_MDR;
+void processActionMSP(char mtr, char speed) {
+    int motorId = mtr & MOTOR_MID;
+    int motorDir = mtr & MOTOR_MDR;
 
-    if (motorId == 1)
-    {
-        if (speed < A_STL)
-        {
-            motorDisable(A_FWD, A_BAK, A_PWM);
-            return;
-        }
-
-        if (motorDir == MOTOR_FWD)
-        {
-            motorEnable(A_FWD, A_BAK, A_PWM, speed);
-        }
-        else if (motorDir == MOTOR_BAK)
-        {
-            motorEnable(A_BAK, A_FWD, A_PWM, speed);
-        }
+    if (motorId > largestMotor) {
+        Serial.print("invalid motor id: ");
+        Serial.println(motorId);
+        stopRobot();
     }
-    else if (motorId == 2)
-    {
-        if (speed < B_STL)
-        {
-            motorDisable(B_FWD, B_BAK, B_PWM);
-            return;
-        }
 
-        if (motorDir == MOTOR_FWD)
-        {
-            motorEnable(B_FWD, B_BAK, B_PWM, speed);
-        }
-        else if (motorDir == MOTOR_BAK)
-        {
-            motorEnable(B_BAK, B_FWD, B_PWM, speed);
-        }
-    }
-}
-
-void motorEnable(int diron, int diroff, int pwm, char speed)
-{
-    digitalWrite(diroff, LOW);
-    digitalWrite(diron, HIGH);
-    analogWrite(pwm, speed);
-}
-
-void motorDisable(int dira, int dirb, int pwm)
-{
-    digitalWrite(dira, LOW);
-    digitalWrite(dirb, LOW);
-    digitalWrite(pwm, LOW);
+    Motor m = motors[motorId-1];
+    m.enable(motorDir, speed);
 }
