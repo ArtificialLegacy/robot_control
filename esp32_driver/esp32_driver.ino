@@ -1,10 +1,6 @@
 #include <WiFi.h>
 
-const char *SSID = "wifi-network";
-const char *PASS = "wifi-pass";
-
-const IPAddress SERVER = IPAddress(0, 0, 0, 0);
-const int PORT = 3131;
+#include "secrets.h"
 
 const unsigned char NIL = 0;
 
@@ -39,12 +35,12 @@ public:
     }
 
     void disable() {
-        this->motorDisable(this->fwd, this->bak, this->pwm);
+        this->motorDisable();
     }
 
     void enable(char dir, char speed) {
         if (speed <= this->stl) {
-            this->motorDisable(this->fwd, this->bak, this->pwm);
+            this->motorDisable();
             return;
         }
 
@@ -65,23 +61,23 @@ private:
     int stl;
 
     void forward(char speed) {
-        this->motorEnable(this->fwd, this->bak, this->pwm, speed);
+        this->motorEnable(this->fwd, this->bak, speed);
     }
 
     void backward(char speed) {
-        this->motorEnable(this->bak, this->fwd, this->pwm, speed);
+        this->motorEnable(this->bak, this->fwd, speed);
     }
 
-    void motorEnable(int diron, int diroff, int pwm, char speed) {
+    void motorEnable(int diron, int diroff, char speed) {
         digitalWrite(diroff, LOW);
         digitalWrite(diron, HIGH);
-        analogWrite(pwm, speed);
+        analogWrite(this->pwm, speed);
     }
 
-    void motorDisable(int dira, int dirb, int pwm) {
-        digitalWrite(dira, LOW);
-        digitalWrite(dirb, LOW);
-        digitalWrite(pwm, LOW);
+    void motorDisable() {
+        digitalWrite(this->fwd, LOW);
+        digitalWrite(this->bak, LOW);
+        digitalWrite(this->pwm, LOW);
     }
 };
 
