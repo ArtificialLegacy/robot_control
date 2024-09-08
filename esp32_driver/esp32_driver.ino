@@ -1,23 +1,7 @@
 #include <WiFi.h>
 
 #include "secrets.h"
-
-const unsigned char NIL = 0;
-
-const unsigned char FLAG_ACK = 1;
-const unsigned char FLAG_CMD = 2;
-const unsigned char FLAG_RPT = 3;
-
-const unsigned char ACTION_MDI = 1;
-const unsigned char ACTION_MSP = 2;
-
-const unsigned char MOTOR_BAK = 64;
-const unsigned char MOTOR_FWD = 128;
-const unsigned char MOTOR_MDR = 192;
-const unsigned char MOTOR_MID = 63;
-
-const unsigned char REPORT_MEN = 1;
-const unsigned char REPORT_MSP = 2;
+#include "proto.h"
 
 class Motor {
 public:
@@ -155,7 +139,7 @@ void processSignal(int len) {
     }
 
     switch (packet[0]) {
-        case NIL:
+        case FLAG_NIL:
             Serial.println("recieved nil response flag.");
             stopRobot();
             break;
@@ -175,7 +159,7 @@ void processCMD(char* packet) {
     for (int i = 0; i < len; i++) {
         int pos = i+2;
         switch (packet[pos]) {
-            case NIL:
+            case ACTION_NIL:
                 break;
             case ACTION_MSP:
                 processActionMSP(packet[pos+1], packet[pos+2]);

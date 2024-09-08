@@ -1,0 +1,15 @@
+{
+  "Keywords": {
+    "FLAG": ["ACK", "CMD", "RPT"],
+    "ACTION": ["MSP", "SET"],
+    "REPORT": ["DEV", "MOT", "GET"]
+  },
+  "Masks": {
+    "MOTOR": {
+      "FWD": 128,
+      "BAK": 64,
+      "DIR": 192,
+      "MID": 63
+    }
+  }
+}

@@ -1,2 +1,4 @@
 
 secrets.cpp
+proto.cpp
+proto.h
