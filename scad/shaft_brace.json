@@ -1,0 +1,11 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "Bearing": {
+      "type": "bearing"
+    },
+    "Lock": {
+      "type": "lock"
+    }
+  }
+}

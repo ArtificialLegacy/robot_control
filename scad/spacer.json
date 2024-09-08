@@ -1,0 +1,85 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "Small-ShaftFree": {
+      "type": "free",
+      "innerDiameter": 8,
+      "outerDiameter": 10,
+      "length": 1
+    },
+    "Small-ShaftLock": {
+      "type": "lock",
+      "outerDiameter": 10,
+      "lockWidth": 4,
+      "lockHeight": 7,
+      "shaftTolerance": 0.4,
+      "length": 1
+    },
+    "Small-Screw": {
+      "type": "free",
+      "innerDiameter": 3.5,
+      "outerDiameter": 5,
+      "length": 1
+    },
+    "Medium-ShaftFree": {
+      "type": "free",
+      "innerDiameter": 8,
+      "outerDiameter": 10,
+      "length": 4
+    },
+    "Medium-ShaftLock": {
+      "type": "lock",
+      "outerDiameter": 10,
+      "lockWidth": 4,
+      "lockHeight": 7,
+      "shaftTolerance": 0.4,
+      "length": 4
+    },
+    "Medium-Screw": {
+      "type": "free",
+      "innerDiameter": 3.5,
+      "outerDiameter": 5,
+      "length": 4
+    },
+    "Large-ShaftFree": {
+      "type": "free",
+      "innerDiameter": 8,
+      "outerDiameter": 10,
+      "length": 10
+    },
+    "Large-ShaftLock": {
+      "type": "lock",
+      "outerDiameter": 10,
+      "lockWidth": 4,
+      "lockHeight": 7,
+      "shaftTolerance": 0.4,
+      "length": 10
+    },
+    "Large-Screw": {
+      "type": "free",
+      "innerDiameter": 3.5,
+      "outerDiameter": 5,
+      "length": 10
+    },
+    "XLarge-ShaftFree": {
+      "type": "free",
+      "innerDiameter": 8,
+      "outerDiameter": 10,
+      "length": 20
+    },
+    "XLarge-ShaftLock": {
+      "type": "lock",
+      "outerDiameter": 10,
+      "lockWidth": 4,
+      "lockHeight": 7,
+      "shaftTolerance": 0.4,
+      "length": 20
+    },
+    "XLarge-Screw": {
+      "type": "free",
+      "innerDiameter": 3.5,
+      "outerDiameter": 5,
+      "length": 20
+    }
+  }
+}

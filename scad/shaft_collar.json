@@ -1,0 +1,11 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "Collar": {
+      "thickness": 4
+    },
+    "ThinCollar": {
+      "thickness": 2
+    }
+  }
+}

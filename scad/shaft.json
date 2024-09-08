@@ -1,0 +1,29 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "Micro": {
+      "length": 5
+    },
+    "Short": {
+      "length": 15
+    },
+    "Medium": {
+      "length": 30
+    },
+    "Long": {
+      "length": 60
+    },
+    "Half-Width": {
+      "length": 100
+    },
+    "XL": {
+      "length": 120
+    },
+    "XXL": {
+      "length": 160
+    },
+    "Full-Width": {
+      "length": 200
+    }
+  }
+}

@@ -1,0 +1,147 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "Bar-x5": {
+      "type": "plate",
+      "holeLength": 5,
+      "holeWidth": 1
+    },
+    "Bar-x10": {
+      "type": "plate",
+      "holeLength": 10,
+      "holeWidth": 1
+    },
+    "Bar-x15": {
+      "type": "plate",
+      "holeLength": 15,
+      "holeWidth": 1
+    },
+    "Bar-x20": {
+      "type": "plate",
+      "holeLength": 20,
+      "holeWidth": 1
+    },
+    "ThinPlate-2x2": {
+      "type": "plate",
+      "holeLength": 2,
+      "holeWidth": 2,
+      "thickness": 2
+    },
+    "ThinPlate-5x2": {
+      "type": "plate",
+      "holeLength": 5,
+      "holeWidth": 2,
+      "thickness": 2
+    },
+    "ThinPlate-10x2": {
+      "type": "plate",
+      "holeLength": 10,
+      "holeWidth": 2,
+      "thickness": 2
+    },
+    "ThinPlate-15x2": {
+      "type": "plate",
+      "holeLength": 15,
+      "holeWidth": 2,
+      "thickness": 2
+    },
+    "ThinPlate-20x2": {
+      "type": "plate",
+      "holeLength": 20,
+      "holeWidth": 2,
+      "thickness": 2
+    },
+    "Plate-2x2": {
+      "type": "plate",
+      "holeLength": 2,
+      "holeWidth": 2
+    },
+    "Plate-5x2": {
+      "type": "plate",
+      "holeLength": 5,
+      "holeWidth": 2
+    },
+    "Plate-10x2": {
+      "type": "plate",
+      "holeLength": 10,
+      "holeWidth": 2
+    },
+    "Plate-15x2": {
+      "type": "plate",
+      "holeLength": 15,
+      "holeWidth": 2
+    },
+    "Plate-20x2": {
+      "type": "plate",
+      "holeLength": 20,
+      "holeWidth": 2
+    },
+    "Angle-1x2-1": {
+      "type": "angle",
+      "holeLength": 1,
+      "holeWidth": 2,
+      "sideHoleHeight": 1
+    },
+    "Angle-5x2x2": {
+      "type": "angle",
+      "holeLength": 5,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "Angle-10x2x2": {
+      "type": "angle",
+      "holeLength": 10,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "Angle-15x2x2": {
+      "type": "angle",
+      "holeLength": 15,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "Angle-20x2x2": {
+      "type": "angle",
+      "holeLength": 20,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "Angle-20x3x2": {
+      "type": "angle",
+      "holeLength": 20,
+      "holeWidth": 3,
+      "sideHoleHeight": 2
+    },
+    "C-5x2x2": {
+      "type": "c",
+      "holeLength": 5,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "C-10x2x2": {
+      "type": "c",
+      "holeLength": 10,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "C-15x2x2": {
+      "type": "c",
+      "holeLength": 15,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "C-20x2x2": {
+      "type": "c",
+      "holeLength": 20,
+      "holeWidth": 2,
+      "sideHoleHeight": 2
+    },
+    "UPlate-11x2x2": {
+      "type": "plate",
+      "holeLength": 11,
+      "holeWidth": 2,
+      "uChannel": true,
+      "uSideLength": 2
+    }
+  }
+}

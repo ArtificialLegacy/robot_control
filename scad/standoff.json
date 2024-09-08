@@ -1,0 +1,29 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "x5": {
+      "height": 5
+    },
+    "x10": {
+      "height": 10
+    },
+    "x15": {
+      "height": 15
+    },
+    "x20": {
+      "height": 20
+    },
+    "x30": {
+      "height": 30
+    },
+    "x35": {
+      "height": 35
+    },
+    "x40": {
+      "height": 40
+    },
+    "x50": {
+      "height": 50
+    }
+  }
+}

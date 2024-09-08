@@ -1,0 +1,29 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "5vMotor-To-Shaft": {
+      "shaft1Height": "5.2",
+      "shaft1Width": "3.7",
+      "shaft1Double": false,
+      "shaft1Thickness": 6,
+      "shaft1Tolerance": 0.2,
+      "shaft2Height": "7",
+      "shaft2Width": "4",
+      "shaft2Double": true,
+      "shaft2Thickness": 4,
+      "shaft2Tolerance": 0.4
+    },
+    "Shaft-To-Shaft": {
+      "shaft1Height": "7",
+      "shaft1Width": "4",
+      "shaft1Double": true,
+      "shaft1Thickness": 4,
+      "shaft1Tolerance": 0.4,
+      "shaft2Height": "7",
+      "shaft2Width": "4",
+      "shaft2Double": true,
+      "shaft2Thickness": 4,
+      "shaft2Tolerance": 0.4
+    }
+  }
+}
