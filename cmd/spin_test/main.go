@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/ArtificialLegacy/robot_control/robot"
+	"github.com/ArtificialLegacy/robot_control/pkg/robot"
 )
 
 const ADDRESS = ":3131"

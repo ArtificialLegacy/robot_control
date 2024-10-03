@@ -3,13 +3,25 @@
 #include "secrets.h"
 #include "proto.h"
 
+float ease(float x) {
+    return -(cos(3.141592 * x) - 1) / 2;
+}
+
+template <typename T> int sgn(T val) {
+    return (T(0) < val) - (val < T(0));
+}
+
 class Motor {
 public:
-    Motor(int pwm, int fwd, int bak, int stl) {
+    int stall;
+    int easefactor;
+
+    Motor(int pwm, int fwd, int bak, int stall, int easefactor) {
         this->pwm = pwm;
         this->fwd = fwd;
         this->bak = bak;
-        this->stl = stl;
+        this->stall = stall;
+        this->easefactor = easefactor;
     }
 
     void init() {
@@ -23,18 +35,32 @@ public:
     }
 
     void enable(char dir, char speed) {
-        if (speed <= this->stl) {
-            this->motorDisable();
+        Serial.println(this->currentSpeed);
+        this->targetSpeed = speed;
+        if (dir == MOTOR_BAK) this->targetSpeed *= -1;
+    }
+
+    void update() {
+        Serial.println(this->currentSpeed);
+
+        if (this->targetSpeed == this->currentSpeed) {
+            this->acc = 0;
             return;
         }
 
-        switch (dir) {
-        case MOTOR_FWD:
-            this->forward(speed);
-            break;
-        case MOTOR_BAK:
-            this->backward(speed);
-            break;
+        if (abs(this->currentSpeed) + this->acc >= abs(this->targetSpeed)) {
+            this->currentSpeed = this->targetSpeed;
+        }
+
+        this->currentSpeed += ease(this->acc) * sgn(this->currentSpeed) * this->easefactor;
+        if (this->acc < 1) this->acc += 0.05;
+
+        if (this->currentSpeed == 0) {
+            this->motorDisable();
+        } else if (this->currentSpeed > 0) {
+            this->motorEnable(this->fwd, this->bak, this->currentSpeed);
+        } else if (this->currentSpeed < 0) {
+            this->motorEnable(this->bak, this->fwd, abs(this->currentSpeed));
         }
     }
 
@@ -42,7 +68,10 @@ private:
     int pwm;
     int fwd;
     int bak;
-    int stl;
+
+    int currentSpeed;
+    int targetSpeed;
+    float acc;
 
     void forward(char speed) {
         this->motorEnable(this->fwd, this->bak, speed);
@@ -67,8 +96,8 @@ private:
 
 const char largestMotor = 2;
 Motor motors[2] = {
-    { 27, 16, 17, 50 },
-    { 26, 18, 19, 50 }
+    { 27, 16, 17, 50, 1 },
+    { 26, 18, 19, 50, 1 }
 };
 
 WiFiClient client;
@@ -129,6 +158,10 @@ void loop() {
     if (!client.connected()) {
         stopRobot();
     }
+
+    for (int i = 0; i < largestMotor; i++) {
+        motors[i].update();
+    }
 }
 
 void processSignal(int len) {
@@ -137,6 +170,8 @@ void processSignal(int len) {
     for (int i = 0; i < len; i++) {
         packet[i] = client.read();
     }
+
+    Serial.println("signal");
 
     switch (packet[0]) {
         case FLAG_NIL:
@@ -155,6 +190,8 @@ void processSignal(int len) {
 
 void processCMD(char* packet) {
     int len = packet[1];
+
+    Serial.println("cmd");
 
     for (int i = 0; i < len; i++) {
         int pos = i+2;
@@ -175,7 +212,7 @@ void processCMD(char* packet) {
 
 void processActionMSP(char mtr, char speed) {
     int motorId = mtr & MOTOR_MID;
-    int motorDir = mtr & MOTOR_MDR;
+    int motorDir = mtr & MOTOR_DIR;
 
     if (motorId > largestMotor) {
         Serial.print("invalid motor id: ");

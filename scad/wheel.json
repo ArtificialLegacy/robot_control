@@ -1,0 +1,122 @@
+{
+  "fileFormatVersion": "1",
+  "parameterSets": {
+    "Tiny": {
+      "diameter": 15,
+      "height": 10,
+      "treadThickness": 0.75,
+      "treadCount": 6
+    },
+    "Small": {
+      "diameter": 30,
+      "height": 10
+    },
+    "Medium": {
+      "diameter": 50,
+      "height": 10
+    },
+    "Large": {
+      "diameter": 70,
+      "height": 10,
+      "treadCount": 15
+    },
+    "Tiny-Smooth": {
+      "diameter": 15,
+      "height": 10,
+      "tread": false
+    },
+    "Small-Smooth": {
+      "diameter": 30,
+      "height": 10,
+      "tread": false
+    },
+    "Medium-Smooth": {
+      "diameter": 50,
+      "height": 10,
+      "tread": false
+    },
+    "Large-Smooth": {
+      "diameter": 70,
+      "height": 10,
+      "tread": false
+    },
+    "Tiny-Thick": {
+      "diameter": 15,
+      "height": 20,
+      "treadThickness": 0.75,
+      "treadCount": 6
+    },
+    "Small-Thick": {
+      "diameter": 30,
+      "height": 20
+    },
+    "Medium-Thick": {
+      "diameter": 50,
+      "height": 20
+    },
+    "Large-Thick": {
+      "diameter": 70,
+      "height": 20,
+      "treadCount": 15
+    },
+    "Tiny-Smooth-Thick": {
+      "diameter": 15,
+      "height": 20,
+      "tread": false
+    },
+    "Small-Smooth-Thick": {
+      "diameter": 30,
+      "height": 20,
+      "tread": false
+    },
+    "Medium-Smooth-Thick": {
+      "diameter": 50,
+      "height": 20,
+      "tread": false
+    },
+    "Large-Smooth-Thick": {
+      "diameter": 70,
+      "height": 20,
+      "tread": false
+    },
+    "Tiny-ExtraThick": {
+      "diameter": 15,
+      "height": 50,
+      "treadThickness": 0.75,
+      "treadCount": 6
+    },
+    "Small-ExtraThick": {
+      "diameter": 30,
+      "height": 50
+    },
+    "Medium-ExtraThick": {
+      "diameter": 50,
+      "height": 50
+    },
+    "Large-ExtraThick": {
+      "diameter": 70,
+      "height": 50,
+      "treadCount": 15
+    },
+    "Tiny-Smooth-ExtraThick": {
+      "diameter": 15,
+      "height": 50,
+      "tread": false
+    },
+    "Small-Smooth-ExtraThick": {
+      "diameter": 30,
+      "height": 50,
+      "tread": false
+    },
+    "Medium-Smooth-ExtraThick": {
+      "diameter": 50,
+      "height": 50,
+      "tread": false
+    },
+    "Large-Smooth-ExtraThick": {
+      "diameter": 70,
+      "height": 50,
+      "tread": false
+    }
+  }
+}
