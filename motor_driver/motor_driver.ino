@@ -1,26 +1,33 @@
-#include <WiFi.h>
 
-#include "secrets.h"
-#include "proto.h"
+const int pwm = 13;
+const int fwd = 12;
+const int bak = 11;
 
-template <typename T>
-int sgn(T val)
+const int FORWARD = 1;
+const int BACKWARD = 2;
+
+int sgn(float a)
 {
-    return (T(0) < val) - (val < T(0));
+    if (a < 0)
+    {
+        return -1;
+    }
+
+    return 1;
 }
 
 class Motor
 {
 public:
-    Motor(int pwm, int fwd, int bak, int minspd, int maxspd, float threshold)
+    Motor(int pwm, int fwd, int bak)
     {
         this->pwm = pwm;
         this->fwd = fwd;
         this->bak = bak;
 
-        this->minspd = minspd;
-        this->maxspd = maxspd;
-        this->threshold = threshold;
+        this->minspd = 40;
+        this->maxspd = 255;
+        this->threshold = 10;
     }
 
     void init()
@@ -48,7 +55,7 @@ public:
     {
         float target = speed;
 
-        if (dir == MOTOR_BAK)
+        if (dir == BACKWARD)
         {
             target *= -1;
         }
@@ -151,151 +158,40 @@ private:
     }
 };
 
-const char largestMotor = 2;
-Motor motors[2] = {
-    {27, 16, 17, 50, 255, 10},
-    {26, 18, 19, 50, 255, 10}};
-
-WiFiClient client;
+Motor motor = {pwm, fwd, bak};
 
 void setup()
 {
-    Serial.begin(115200);
-    WiFi.begin(SSID, PASS);
+    Serial.begin(9600);
 
-    while (WiFi.status() != WL_CONNECTED)
-    {
-        delay(500);
-        Serial.println("...");
-    }
-
-    Serial.print("WiFi connected with IP:");
-    Serial.println(WiFi.localIP());
-
-    while (!client.connect(SERVER, PORT))
-    {
-        Serial.println("Connection to host failed");
-        delay(1000);
-    }
-
-    client.write(FLAG_ACK);
-    while (!client.available())
-    {
-        Serial.println("waiting for ack...");
-    }
-
-    char response = client.read();
-    if (response != FLAG_ACK)
-    {
-        Serial.println("ack failed");
-        stopRobot();
-    }
-    client.flush();
-
-    for (int i = 0; i < largestMotor; i++)
-    {
-        motors[i].init();
-    }
+    motor.init();
+    motor.enable();
 }
 
-void stopRobot()
-{
-    Serial.println();
-    Serial.println("disconnecting.");
-    client.stop();
-
-    for (int i = 0; i < largestMotor; i++)
-    {
-        motors[i].disable();
-    }
-
-    for (;;)
-        ;
-}
+int dir = BACKWARD;
+int speed = 0;
 
 void loop()
 {
-    int len = client.available();
-    if (len > 0)
+    if (motor.atSpeed() && speed == 0)
     {
-        processSignal(len);
-    }
-
-    if (!client.connected())
-    {
-        stopRobot();
-    }
-
-    for (int i = 0; i < largestMotor; i++)
-    {
-        motors[i].update();
-    }
-}
-
-void processSignal(int len)
-{
-    char *packet = new char[len];
-
-    for (int i = 0; i < len; i++)
-    {
-        packet[i] = client.read();
-    }
-
-    Serial.println("signal");
-
-    switch (packet[0])
-    {
-    case FLAG_NIL:
-        Serial.println("recieved nil response flag.");
-        stopRobot();
-        break;
-    case FLAG_CMD:
-        processCMD(packet);
-        break;
-    }
-
-    client.write(FLAG_ACK);
-    client.flush();
-    delete[] packet;
-}
-
-void processCMD(char *packet)
-{
-    int len = packet[1];
-
-    Serial.println("cmd");
-
-    for (int i = 0; i < len; i++)
-    {
-        int pos = i + 2;
-        switch (packet[pos])
+        speed = 255;
+        if (dir == FORWARD)
         {
-        case ACTION_NIL:
-            break;
-        case ACTION_MSP:
-            processActionMSP(packet[pos + 1], packet[pos + 2]);
-            i += 2;
-            break;
-        default:
-            Serial.print("unknown action: ");
-            Serial.println(packet[pos]+0);
-            stopRobot();
+            dir = BACKWARD;
+            motor.speedSet(dir, 255);
+        }
+        else
+        {
+            dir = FORWARD;
+            motor.speedSet(dir, 255);
         }
     }
-}
-
-void processActionMSP(char mtr, char speed)
-{
-    int motorId = mtr & MOTOR_MID;
-    int motorDir = mtr & MOTOR_DIR;
-
-    if (motorId > largestMotor)
+    else if (motor.atSpeed() && speed == 255)
     {
-        Serial.print("invalid motor id: ");
-        Serial.println(motorId);
-        stopRobot();
+        speed = 0;
+        motor.speedSet(dir, 0);
     }
-
-    Motor * m = &motors[motorId - 1];
-    m->speedSet(motorDir, speed);
+    motor.update();
+    // delay(100);
 }

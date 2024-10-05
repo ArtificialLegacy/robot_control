@@ -29,7 +29,6 @@ func main() {
 				Action(robot.ACTION_MSP, 2|dir, speed),
 			)
 
-			speed--
 			if speed == 0 {
 				if dir == robot.MOTOR_FWD {
 					dir = robot.MOTOR_BAK
@@ -38,10 +37,12 @@ func main() {
 				}
 
 				speed = 255
+			} else if speed == 255 {
+				speed = 0
 			}
 		}
 
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(1000 * time.Millisecond)
 	}
 }
 
