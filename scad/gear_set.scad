@@ -11,13 +11,15 @@ height=5;
 spacingx=1;
 spacingy=0;
 
-teeth1=5;
-teeth2=7;
+teeth1=7;
+teeth2=5;
 mod=3;
 
-lockWidth=5;
+lockWidth=4;
 lockHeight=7;
 shaftTolerance=0.2;
+
+gear1=true;
 
 pressure=20;
 
@@ -40,10 +42,12 @@ gridSize1=ceil(pr1/5);
 gridRadius2=ceil(pr2/10)*10;
 gridSize2=ceil(pr2/5);
 
-gear(teeth1, ps1, gridSize1, gridRadius1, pr1);
-
-translate([dist, 0, 0]) {
-    gear(teeth2, ps2, gridSize2, gridRadius2, pr2);
+if (gear1) {
+    gear(teeth1, ps1, gridSize1, gridRadius1, pr1);
+} else {
+    translate([dist, 0, 0]) {
+        gear(teeth2, ps2, gridSize2, gridRadius2, pr2);
+    }
 }
 
 module gear(teeth, ps, gs, gr, pr, spin=0, hide=0) {

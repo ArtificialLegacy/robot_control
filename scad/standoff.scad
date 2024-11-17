@@ -1,4 +1,6 @@
-$fn=64;
+
+$fa=1;
+$fs=0.5;
 
 height=35;
 diameter=10;
@@ -26,8 +28,6 @@ difference() {
     translate([2.5, 0, nutOffset]) {
         cube([nut_cutout, nut_cutout, nut_height], center=true);
     }
-    
-    // nut slots
     translate([2.5, 0, height-nutOffset]) {
         cube([nut_cutout, nut_cutout, nut_height], center=true);
     }

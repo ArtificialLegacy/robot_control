@@ -1,6 +1,7 @@
 include <BOSL2/std.scad>
 
-$fn=64;
+$fa=1;
+$fs=0.5;
 
 thickness = 5;
 holeLength = 5;

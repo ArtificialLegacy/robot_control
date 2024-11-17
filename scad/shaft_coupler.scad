@@ -1,5 +1,6 @@
 
-$fn=64;
+$fa=1;
+$fs=0.5;
 
 shaft1Width=4;
 shaft1Height=7;

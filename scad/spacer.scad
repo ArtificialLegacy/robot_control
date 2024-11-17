@@ -1,7 +1,8 @@
 
 use <./lib/shaft_lock.scad>
 
-$fn=64;
+$fa=1;
+$fs=0.5;
 
 length=4;
 
